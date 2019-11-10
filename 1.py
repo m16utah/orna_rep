@@ -16,22 +16,31 @@ k=0
 def proverka():
     engine.say('Ошибка. Началась проерка')
     engine.runAndWait()
-    mobl = pyautogui.locateOnScreen('Continue.png', confidence=0.8,region=(0,0,3840,2160),grayscale=True)
+    mobl = None
+    mobl = pyautogui.locateOnScreen('Continue.png', confidence=0.8,region=(0,0,3840,2160))
     if mobl!=None:
         x,y=pyautogui.center(mobl)
         click(x,y,0.2)
-    mobl = pyautogui.locateOnScreen('Leave.png', confidence=0.8,region=(0,0,3840,2160),grayscale=True)
+        print('Continue error')
+        mobl = None
+    mobl = pyautogui.locateOnScreen('Leave.png', confidence=0.8,region=(0,0,3840,2160))
     if mobl!=None:
         x,y=pyautogui.center(mobl)
         click(x,y,0.2)
-    mobl = pyautogui.locateOnScreen('krest.png', confidence=0.8,region=(0,0,3840,2160),grayscale=True)
+        print('Leave error')
+        mobl = None
+    mobl = pyautogui.locateOnScreen('krest.png', confidence=0.8,region=(0,0,3840,2160))
     if mobl!=None:
         x,y=pyautogui.center(mobl)
         click(x,y,0.2)
+        print('krest error')
+        mobl = None
     mobl = pyautogui.locateOnScreen('attack.png', confidence=0.8,region=(0,0,3840,2160))
     if mobl!=None:
         x,y=pyautogui.center(mobl)
         click(x,y+250,3)
+        print('attack error')
+        mobl = None
         #battle - можно только это использовать, но если закончится мана, то никогда не выйдет 
         
 def click(x,y,t): # просто клик мышки по координатам
@@ -131,7 +140,7 @@ def search(ii,k): #поиск моба в нейтрале
         time.sleep(0.1)  #0.5
         x,y=pyautogui.center(mobl) #клик по мобу
         click(x,y,0.9) #клик
-        time.sleep(0.5) #1 не менять
+        time.sleep(0.8) #1 не менять
         battle(k)
         return(1)
     else:
@@ -140,28 +149,52 @@ def search(ii,k): #поиск моба в нейтрале
 def starlord():#отдельная функция боя с Рейд-боссом Старлорд
     mobl = pyautogui.locateOnScreen('attack.png', confidence=0.8,region=(1200,1550, 400, 170),grayscale=True)
     i=0
-    while mobl != None:
+    x=0
+    y=0
+    while mobl:
         print('attack starlord')
-        if (pyautogui.locateOnScreen(('mana60.png'), confidence=0.8,region=(969,1187, 94, 49)))!=None:
+        #проверка здоровья
+        #может зависнуть при потере маны, но мана у нас контролится всегда полная, ее должно хватать.
+        while (pyautogui.locateOnScreen(('heal80.png'), confidence=0.9,region=(988,1130,95,57)))!=None:
             print('heal starlord')
             time.sleep(2) #не уменьшать, когда дает сдачи - идет долга анимация, не прожимается ITEM
-            click (2700,1900,0.2) #ITEM
+            click (3100,1650,0.3) #SKILL
             time.sleep(0.8)
-            x,y=pyautogui.center(pyautogui.locateOnScreen(('large_mana.png'), confidence=0.9,region=(0,0, 3840,2160)))
-            click (x,y,0.2)
-        time.sleep(0.7)
+            mobl=pyautogui.locateOnScreen(('osmos.png'), confidence=0.9,region=(0,0, 3840,2160)) #осмострайк, может менять положение
+            if mobl:
+                x,y=pyautogui.center(mobl)
+                click (x,y,0.2)             
+            time.sleep(0.5)
+        #Проверка маны
+        if (pyautogui.locateOnScreen(('mana60.png'), confidence=0.9,region=(969,1187, 94, 49)))!=None:
+            print('mana starlord')
+            time.sleep(2) #не уменьшать, когда дает сдачи - идет долга анимация, не прожимается ITEM
+            click (2700,1900,0.3) #ITEM
+            time.sleep(0.8)
+            mobl=pyautogui.locateOnScreen(('large_mana.png'), confidence=0.9,region=(0,0, 3840,2160))
+            if mobl:
+                x,y=pyautogui.center(mobl)
+                click (x,y,0.2)
+                time.sleep(0.2)# потому что иногда анимация большая, тогда добавляет еще одну банку
+        time.sleep(0.5)
+        #атака
         mobl = pyautogui.locateOnScreen('attack.png', confidence=0.8,region=(1200,1550, 400, 170),grayscale=True) #!ok ATTACK
-        x,y=pyautogui.center(mobl)
-        i+=1
-        click((x+i-800),(y+i-100),0.2) #атака (по трикату)
-        time.sleep(0.8) # проверка, если атака была долгой
+        if mobl:
+            x,y=pyautogui.center(mobl)
+            i+=1
+            click((x+i-800),(y+i-100),0.2) #атака (по трикату)
+            time.sleep(0.8) # проверка, если атака была долгой
         if pyautogui.locateOnScreen('attack.png', confidence=0.8,region=(1200,1550, 400, 170),grayscale=True)==None:
             time.sleep(1.5)
-            mobl = pyautogui.locateOnScreen('attack.png', confidence=0.8,region=(1200,1550, 400, 170),grayscale=True)
+            mobl = pyautogui.locateOnScreen('attack.png', confidence=0.8,region=(1200,1550, 400, 170))
+            print("дублирующая проверка атаки")
     print('end starlord') 
     engine.say('старлорд закончен')
     engine.runAndWait()
 
+
+    
+    
 # ==== основной игровой цикл, с отсечкой на клавиатуре ====
 
 
@@ -188,6 +221,8 @@ for k in range(2,200):
     engine.say('Новый цикл '+str(k))
     engine.runAndWait()
     time.sleep(0.5) #1
+    
+
     
 #отключение компьютера    
 print ("Спокойной ночи")    
