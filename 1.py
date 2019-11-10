@@ -50,7 +50,7 @@ def autoheal():
         x,y=pyautogui.center(mobl)
         click(x,y,1.5) #2
 
-def battle(k): #меню ведения боя
+def battle(k): #меню ведения боя 1 - обычный, 0 - северяне
     print("battle")
     xx=0
     yy=0
@@ -137,6 +137,31 @@ def search(ii,k): #поиск моба в нейтрале
     else:
         return(0)# возврат, значит был бой.
     
+def starlord():#отдельная функция боя с Рейд-боссом Старлорд
+    mobl = pyautogui.locateOnScreen('attack.png', confidence=0.8,region=(1200,1550, 400, 170),grayscale=True)
+    i=0
+    while mobl != None:
+        print('attack starlord')
+        if (pyautogui.locateOnScreen(('mana60.png'), confidence=0.8,region=(969,1187, 94, 49)))!=None:
+            print('heal starlord')
+            time.sleep(2) #не уменьшать, когда дает сдачи - идет долга анимация, не прожимается ITEM
+            click (2700,1900,0.2) #ITEM
+            time.sleep(0.8)
+            x,y=pyautogui.center(pyautogui.locateOnScreen(('large_mana.png'), confidence=0.9,region=(0,0, 3840,2160)))
+            click (x,y,0.2)
+        time.sleep(0.7)
+        mobl = pyautogui.locateOnScreen('attack.png', confidence=0.8,region=(1200,1550, 400, 170),grayscale=True) #!ok ATTACK
+        x,y=pyautogui.center(mobl)
+        i+=1
+        click((x+i-800),(y+i-100),0.2) #атака (по трикату)
+        time.sleep(0.8) # проверка, если атака была долгой
+        if pyautogui.locateOnScreen('attack.png', confidence=0.8,region=(1200,1550, 400, 170),grayscale=True)==None:
+            time.sleep(1.5)
+            mobl = pyautogui.locateOnScreen('attack.png', confidence=0.8,region=(1200,1550, 400, 170),grayscale=True)
+    print('end starlord') 
+    engine.say('старлорд закончен')
+    engine.runAndWait()
+
 # ==== основной игровой цикл, с отсечкой на клавиатуре ====
 
 
@@ -145,9 +170,10 @@ engine.say('запуск')
 engine.runAndWait()
 
 #battle(1)
+starlord()                                 
 
 
-for k in range(200):
+for k in range(2,200):
     print ("error=",error)
     if k!=0 and error==0:   #проверка на выпавшие не предусмотренные меню.
         proverka()
