@@ -17,32 +17,18 @@ def proverka():
     engine.say('Ошибка. Началась проерка')
     engine.runAndWait()
     mobl = None
-    mobl = pyautogui.locateOnScreen('Continue.png', confidence=0.8,region=(0,0,3840,2160))
-    if mobl!=None:
-        x,y=pyautogui.center(mobl)
-        click(x,y,0.2)
-        print('Continue error')
-        mobl = None
-    mobl = pyautogui.locateOnScreen('Leave.png', confidence=0.8,region=(0,0,3840,2160))
-    if mobl!=None:
-        x,y=pyautogui.center(mobl)
-        click(x,y,0.2)
-        print('Leave error')
-        mobl = None
-    mobl = pyautogui.locateOnScreen('krest.png', confidence=0.8,region=(0,0,3840,2160))
-    if mobl!=None:
-        x,y=pyautogui.center(mobl)
-        click(x,y,0.2)
-        print('krest error')
-        mobl = None
-    mobl = pyautogui.locateOnScreen('attack.png', confidence=0.8,region=(0,0,3840,2160))
-    if mobl!=None:
-        x,y=pyautogui.center(mobl)
-        click(x,y+250,3)
-        print('attack error')
-        mobl = None
-        #battle - можно только это использовать, но если закончится мана, то никогда не выйдет 
-        
+    a=('Continue.png','Leave.png','krest.png','attack.png')
+    for i in a:
+        mobl = pyautogui.locateOnScreen(i, confidence=0.8,region=(0,0,3840,2160))
+        if mobl:
+            x,y=pyautogui.center(mobl)
+            if i == 'attack.png':
+                click(x,y+250,3)
+            else:
+                click(x,y,0.2)
+            print(i+' error')
+            mobl = None
+  
 def click(x,y,t): # просто клик мышки по координатам
     print("click")
     win32api.SetCursorPos((x,y))
@@ -203,7 +189,7 @@ engine.say('запуск')
 engine.runAndWait()
 
 #battle(1)
-starlord()                                 
+#starlord()                                 
 
 
 for k in range(2,200):
