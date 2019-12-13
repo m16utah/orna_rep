@@ -82,7 +82,7 @@ def autoheal():
         mobl = pyautogui.locateOnScreen('autoheal.png', confidence=0.8,region=(3350,1800, 250, 250),grayscale=True)
         if mobl!=None:                        #если есть картинка, то
             x,y=pyautogui.center(mobl)
-            click(x,y,1.5)                    #2
+            click(x,y,2)                    #2
         
         
 #        красная   2008-2158,1900                        156 -10 -10
@@ -179,7 +179,7 @@ def battle(k):                            #меню ведения боя 1 - о
 """
 
 def search(ii,k):                            #поиск моба в нейтрале.ii-номер бота, k-поиск северян
-    print('search',ii)
+    print('search ',k," ",ii)
 #    file.write('search '+str(ii)+end='\n')
     if k==0:                                 #ищем северян, магических мобов, как самых ценных, пример: X1.png
         mobl = pyautogui.locateOnScreen(('x'+(str(ii))+'.png'), confidence=0.8,region=(1250,480, 1280, 1150))
@@ -189,7 +189,7 @@ def search(ii,k):                            #поиск моба в нейтр�
         print(mobl)
         time.sleep(0.1)                      #0.5
         x,y=pyautogui.center(mobl)          
-        click(x,y,0.7)                        #08
+        click(x,y,0.9)                        #08
         #time.sleep(0.8)                      #1
         battle(k)
         return(1)
@@ -221,11 +221,11 @@ def starlord():                              #отдельная функция 
         while pyautogui.locateOnScreen('heal80.png', confidence=0.9,region=(988,1130,250,67)):
             print('heal starlord')
             WB(50,2815,1541)                #ждем появления SKILL
-            click (3100,1650,0.3)           # SKILL
+            click (3100,1650,0.3)           # SKILL 
           #  time.sleep(0.4)                 #08
             WB(47,1000, 1700)                #Osmostrike
                                             #осмострайк, может менять положение, ищем его:
-            mobl=pyautogui.locateOnScreen('osmos.png', confidence=0.9,region=(0,0, 3840,2160)) 
+            mobl=pyautogui.locateOnScreen('osmos.png', confidence=0.9,region=(235,1241, 3360,755)) 
                                             #проверка на прозрачность кнопки
             im = pyautogui.screenshot()
             a = im.getpixel((1000, 1700))
@@ -238,22 +238,22 @@ def starlord():                              #отдельная функция 
                 click (x,y,0.2)
                 print ('osmos')
             #time.sleep(0.5)
-            WB(56,1300,1600)
+            WB(56,1300,1600)                #attack
                                             #Проверка маны
         if pyautogui.locateOnScreen('mana60.png', confidence=0.9,region=(969,1183, 250, 55)):
             print('mana starlord')
-            WB (60,2600,1900)               #ITEM  #2 не уменьшать,идет долга анимация, когда дают сдачи
-            time.sleep(0.3)
-            click (2903,1903,0.3)         #ITEM 
+            WB (239,2754,1896)               #ITEM 2754,1896 = 239/ 145 - тускл
+            click (2903,1903,0.2)           #ITEM 
+
             WB (216,1919,1930)               #крест
-            mobl=pyautogui.locateOnScreen(('large_mana.png'), confidence=0.9,region=(0,0, 3840,2160))
+            mobl=pyautogui.locateOnScreen(('large_mana.png'), confidence=0.9,region=(250,750, 3333,550))
             if mobl:                       #если нашли зелье, прожимаем его.
                 x,y=pyautogui.center(mobl)
                 click (x,y,0.2)
                 print ('Large_mana_heal')
 #                time.sleep(0.9)            #07 потому что иногда анимация большая, тогда добавляет еще одну банку
 #        time.sleep(0.7)
-        WB(56,1300,1600)                   #attack
+        WB(56,1300,1600)                    #attack
         if pyautogui.locateOnScreen('heal80.png', confidence=0.9,region=(988,1130,250,67))==None:
 #            WB(56,1300,1600)                    #attack                 #после проверки здоровья и маны, реализуем атаку.
             print('attack starlord')
@@ -266,7 +266,7 @@ def starlord():                              #отдельная функция 
                 click((x+i-1000),(y+i-100),0.2)     #атака по кнопке левее.смещение в одну ось работает через раз!.
                 print ('удар')
 #            time.sleep(0.8)                 #08 проверка, если атака была долгой
-        WB(60,2600,1900)                     #ITEM
+        WB (239,2754,1896)                   #ITEM
         if not mobl:
             time.sleep(3)
             mobl = pyautogui.locateOnScreen('attack.png', confidence=0.8,region=(1200,1550, 400, 170))
@@ -335,7 +335,7 @@ starlord()                                #начинаем с боя с рей�
                                            # продолжится поиск мобов и атака на них
 #bonus()
 
-for k in range(124):                       #кол-во циклов поиска
+for k in range(140):                       #кол-во циклов поиска
     print ("error=",error)
     if error==0:                           #проверка на выпавшие не предусмотренные меню, елси находятся мобы
         proverka()
@@ -348,7 +348,7 @@ for k in range(124):                       #кол-во циклов поиск�
     engine.say('Новый цикл '+str(k))
     engine.runAndWait()
     time.sleep(0.5) #1
-    if k%25==0 and k>1:                    #каждый 40й цикл прожимаем банки
+    if k%20==0 and k>1:                    #каждый 40й цикл прожимаем банки
         bonus()
                                           #переход компьютера в спящий режим. 
 print ("Спокойной ночи")    
